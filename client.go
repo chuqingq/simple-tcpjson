@@ -52,13 +52,13 @@ func (c *Client) Start() error {
 	}
 	c.State = ClientConnected
 
+	c.encoder = json.NewEncoder(c.Conn)
+	c.decoder = json.NewDecoder(c.Conn)
 	go c.loop()
 	return nil
 }
 
 func (c *Client) loop() {
-	c.encoder = json.NewEncoder(c.Conn)
-	c.decoder = json.NewDecoder(c.Conn)
 	for {
 		var msg sjson.Json
 		err := c.decoder.Decode(&msg)

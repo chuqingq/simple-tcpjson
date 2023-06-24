@@ -1,7 +1,7 @@
 package tcpjson
 
 import (
-	"log"
+	"encoding/json"
 	"net"
 )
 
@@ -55,7 +55,7 @@ func (s *Server) loopAccept() {
 	for {
 		conn, err := s.Listener.Accept()
 		if err != nil {
-			log.Printf("Server.Accept() error: %v", err)
+			// log.Printf("Server.Accept() error: %v", err)
 			return
 		}
 		s.Conns = append(s.Conns, conn)
@@ -69,6 +69,8 @@ func (s *Server) loopAccept() {
 		if s.OnClientStateChange != nil {
 			s.OnClientStateChange(c, ClientConnected)
 		}
+		c.encoder = json.NewEncoder(c.Conn)
+		c.decoder = json.NewDecoder(c.Conn)
 		go c.loop()
 	}
 }
