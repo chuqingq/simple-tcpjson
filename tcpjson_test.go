@@ -5,8 +5,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/bmizerany/assert"
-	json "github.com/chuqingq/simple-json"
+	sjon "github.com/chuqingq/simple-json"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestMain(t *testing.T) {
@@ -20,23 +20,26 @@ func TestMain(t *testing.T) {
 			wg.Done()
 		}
 	})
-	server.SetOnMsgRecv(func(peer *Client, msg *json.Json, err error) {
+	server.SetOnMsgRecv(func(peer *Client, msg *sjon.Json, err error) {
 		log.Printf("peer[%p] recv: %v, err: %v", peer, msg, err)
 		if err == nil {
 			assert.Equal(t, msg.Get("name").MustString(), "value")
 			wg.Done()
 		}
 	})
-	server.Start()
+	err := server.Start()
+	assert.Nil(t, err)
 	defer server.Stop()
 
 	client := NewClient(":12345")
-	client.Start()
+	err = client.Start()
+	assert.Nil(t, err)
 	defer client.Stop()
 
-	j := &json.Json{}
+	j := &sjon.Json{}
 	j.Set("name", "value")
 
-	client.Send(j)
+	err = client.Send(j)
+	assert.Nil(t, err)
 	wg.Wait()
 }
