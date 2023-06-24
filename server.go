@@ -47,6 +47,7 @@ func (s *Server) Start() error {
 	}
 
 	go s.loopAccept()
+	return nil
 }
 
 func (s *Server) loopAccept() {
