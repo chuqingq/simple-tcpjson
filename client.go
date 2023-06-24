@@ -67,6 +67,7 @@ func (c *Client) loop() {
 			if c.OnStateChange != nil {
 				c.OnStateChange(c, ClientDisconnected)
 			}
+			c.Conn.Close()
 			return
 		}
 		if c.OnMsgRecv != nil {
