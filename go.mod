@@ -1,4 +1,4 @@
-module tcpjson
+module github.com/chuqingq/simple-tcpjson
 
 go 1.20
 
